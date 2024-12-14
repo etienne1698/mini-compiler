@@ -41,10 +41,29 @@ int Lexer::getNextToken()
         }
         return TOKEN_IDENTIFIER;
     }
+
+    if (isdigit(lastChar) || lastChar == '.')
+    { // Number: [0-9.]+
+        std::string NumStr;
+        do
+        {
+            NumStr += lastChar;
+            lastChar = getchar();
+        } while (isdigit(lastChar) || lastChar == '.');
+
+        numVal = strtod(NumStr.c_str(), nullptr);
+        return TOKEN_IDENTIFIER;
+    }
+
     return lastChar;
 }
 
 std::string Lexer::getIdentifier()
 {
     return identifierStr;
+}
+
+double Lexer::getNumVal()
+{
+    return numVal;
 }

@@ -1,3 +1,5 @@
+#include "map"
+
 #include "../lexer/lexer.h"
 
 #include "../ast/expr_ast.h"
@@ -15,7 +17,11 @@ class Parser
     Lexer lexer;
     std::unique_ptr<ExprAST> parseFuncDef();
     std::unique_ptr<ExprAST> parseExpr();
+
     std::unique_ptr<ExprAST> parseParentesisExpr();
+    std::unique_ptr<ExprAST> parseIdentifierExpr();
+    std::unique_ptr<ExprAST> parseNumberExpr();
+
     std::unique_ptr<ExprAST> logError(std::string err);
     char currentToken;
     void getNextToken();

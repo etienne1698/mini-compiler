@@ -1,5 +1,6 @@
 #include <cctype>
 #include <string>
+#include "memory"
 
 #include "parser.h"
 
@@ -30,40 +31,67 @@ int Parser::getTokenPrecedence()
     return TokPrec;
 }
 
+std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
+{
+    const auto identifierName = lexer.getIdentifier();
+    getNextToken();
+    if (currentToken != '(')
+    {
+        return std::make_unique<VariableExprAST>(identifierName);
+    }
+    std::vector<std::unique_ptr<ExprAST>> args;
+    while (true)
+    {
+        if (auto arg = parseExpr())
+            args.push_back(std::move(arg));
+        else
+            return nullptr;
+        if (currentToken == ')')
+            break;
+        if (currentToken != ',')
+            return logError("Expected ')' or ',' in argument list");
+        getNextToken();
+    }
+    getNextToken();
+
+    return std::make_unique<CallExprAST>(identifierName, std::move(args));
+}
+
 std::unique_ptr<ExprAST> Parser::parseExpr()
 {
     switch (currentToken)
     {
     case TOKEN_IDENTIFIER:
-
+        return parseIdentifierExpr();
+    case TOKEN_NUMBER:
+        return parseNumberExpr();
+    case '(':
+        return parseParentesisExpr();
     default:
         return nullptr;
     }
 }
 
-std::unique_ptr<ExprAST> Parser::parseFuncDef()
+std::unique_ptr<ExprAST> Parser::parseParentesisExpr()
 {
     getNextToken();
-    if (currentToken != TOKEN_IDENTIFIER)
-    {
-        return logError("Expected identifier");
-    }
-    const std::string fnName = lexer.getIdentifier();
+    auto V = parseExpr();
+    if (!V)
+        return nullptr;
     getNextToken();
-    if (currentToken != '(')
-    {
-        return logError("Expected \"(\"");
-    }
-    do
-    {
-        getNextToken();
-        if (currentToken != TOKEN_IDENTIFIER && currentToken != TOKEN_NUMBER)
-        {
-            return logError("Expected identifier or number");
-        }
-    } while (currentToken == ',');
+    if (currentToken != ')')
+        return logError("expected ')'");
+    getNextToken();
+    return V;
+}
+std::unique_ptr<ExprAST> Parser::parseNumberExpr()
+{
+    auto Result = std::make_unique<NumberExprAST>(lexer.getNumVal());
+    return std::move(Result);
+}
 
-    return logError("THIS IS NOT YET FULL IMPLEMENTED");
+std::unique_ptr<ExprAST> Parser::parseFuncDef()
+{
 }
 
 void Parser::parse()
