@@ -11,8 +11,7 @@ class PrototypeAST
     std::vector<std::string> args;
 
 public:
-    PrototypeAST(const std::string &name, std::vector<std::string> args)
-        : name(name), args(std::move(args)) {}
+    PrototypeAST(const std::string &name, std::vector<std::string> args);
 
     const std::string &getName();
 };

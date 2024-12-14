@@ -15,10 +15,10 @@ class Lexer
     double numVal;
     std::string identifierStr;
     size_t position = 0;
+    char getNextChar();
 
 public:
     explicit Lexer(const std::string &input);
-    char getNextChar();
     int getNextToken();
     std::string getIdentifier();
 };
