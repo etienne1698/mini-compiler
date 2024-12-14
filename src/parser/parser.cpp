@@ -1,8 +1,18 @@
 #include <iostream>
 #include "../lexer/lexer.h"
+#include "../logger/logger.h"
 #include "parser.h"
 
-Parser::Parser(const Lexer &lexer) : lexer(lexer) {}
+Parser::Parser(const Lexer &lexer, const Logger &logger) : lexer(lexer), logger(logger) {}
+
+void Parser::parseFunc()
+{
+    TOKEN token = lexer.getNextToken();
+    if (token != TOKEN_IDENTIFIER)
+    {   
+        logger.error("Expected identifier");
+    }
+}
 
 void Parser::parse()
 {
@@ -16,7 +26,7 @@ void Parser::parse()
             std::cout << "END OF FILE" << "\n";
             return;
         case TOKEN_FUNC:
-            std::cout << lexer.getIdentifier() << "\n";
+            parseFunc();
             break;
         case TOKEN_IDENTIFIER:
             std::cout << lexer.getIdentifier() << "\n";
