@@ -7,16 +7,23 @@ Parser::Parser(const Lexer &lexer, const Logger &logger) : lexer(lexer), logger(
 
 void Parser::parseFunc()
 {
-    TOKEN token = lexer.getNextToken();
+    int token = lexer.getNextToken();
     if (token != TOKEN_IDENTIFIER)
-    {   
+    {
         logger.error("Expected identifier");
+    }
+
+    const std::string fnName = lexer.getIdentifier();
+    
+    if (token = lexer.getNextToken() != '(')
+    {
+        logger.error("Expected \"(\"");
     }
 }
 
 void Parser::parse()
 {
-    TOKEN token;
+    int token;
     while (true)
     {
         token = lexer.getNextToken();
@@ -25,7 +32,7 @@ void Parser::parse()
         case TOKEN_EOF:
             std::cout << "END OF FILE" << "\n";
             return;
-        case TOKEN_FUNC:
+        case TOKEN_DEF:
             parseFunc();
             break;
         case TOKEN_IDENTIFIER:

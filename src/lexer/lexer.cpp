@@ -14,13 +14,18 @@ char Lexer::getNextChar()
     return '\0';
 }
 
-TOKEN Lexer::getNextToken()
+int Lexer::getNextToken()
 {
     char lastChar = getNextChar();
 
     while (isspace(lastChar))
     {
         lastChar = getNextChar();
+    }
+
+    if (lastChar == '\0')
+    {
+        return TOKEN_EOF;
     }
 
     if (isalpha(lastChar))
@@ -30,13 +35,13 @@ TOKEN Lexer::getNextToken()
         {
             identifierStr += lastChar;
         }
-        if (identifierStr == "func")
+        if (identifierStr == "def")
         {
-            return TOKEN_FUNC;
+            return TOKEN_DEF;
         }
         return TOKEN_IDENTIFIER;
     }
-    return TOKEN_EOF;
+    return lastChar;
 }
 
 std::string Lexer::getIdentifier()

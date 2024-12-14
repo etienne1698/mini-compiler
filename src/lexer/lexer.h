@@ -4,8 +4,9 @@
 enum TOKEN
 {
     TOKEN_EOF = -1,
-    TOKEN_FUNC = -2,
+    TOKEN_DEF = -2,
     TOKEN_IDENTIFIER = -3,
+    TOKEN_NUMBER = -4,
 };
 
 class Lexer
@@ -18,7 +19,7 @@ class Lexer
 public:
     explicit Lexer(const std::string &input);
     char getNextChar();
-    TOKEN getNextToken();
+    int getNextToken();
     std::string getIdentifier();
 };
 
