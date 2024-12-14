@@ -5,7 +5,7 @@
 #include "../ast/variableexpr_ast.h"
 #include "../ast/callexpr_ast.h"
 #include "../ast/binaryexpr_ast.h"
-#include "../ast/prototypeexpr_ast.cpp"
+#include "../ast/prototypeexpr_ast.h"
 
 #ifndef PARSER_H
 #define PARSER_H
@@ -13,10 +13,14 @@
 class Parser
 {
     Lexer lexer;
-    std::unique_ptr<ExprAST> parseFunc();
+    std::unique_ptr<ExprAST> parseFuncDef();
+    std::unique_ptr<ExprAST> parseExpr();
+    std::unique_ptr<ExprAST> parseParentesisExpr();
     std::unique_ptr<ExprAST> logError(std::string err);
-    int currentToken;
+    char currentToken;
     void getNextToken();
+    int getTokenPrecedence();
+    static std::map<char, int> BinopPrecedence;
 
 public:
     explicit Parser(const Lexer &lexer);

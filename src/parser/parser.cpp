@@ -1,23 +1,47 @@
-#include <iostream>
-#include "../lexer/lexer.h"
-
-#include "../ast/expr_ast.h"
-#include "../ast/numberexpr_ast.h"
-#include "../ast/variableexpr_ast.h"
-#include "../ast/callexpr_ast.h"
-#include "../ast/binaryexpr_ast.h"
-#include "../ast/prototypeexpr_ast.cpp"
+#include <cctype>
+#include <string>
 
 #include "parser.h"
 
-Parser::Parser(const Lexer &lexer) : lexer(lexer) {}
+Parser::Parser(const Lexer &lexer) : lexer(lexer)
+{
+}
+
+std::map<char, int> Parser::BinopPrecedence = {
+    {'+', 10},
+    {'-', 10},
+    {'*', 20},
+    {'/', 20}};
 
 void Parser::getNextToken()
 {
     currentToken = lexer.getNextToken();
 }
 
-std::unique_ptr<ExprAST> Parser::parseFunc()
+int Parser::getTokenPrecedence()
+{
+    if (!isascii(currentToken))
+        return -1;
+
+    // Make sure it's a declared binop.
+    int TokPrec = Parser::BinopPrecedence[currentToken];
+    if (TokPrec <= 0)
+        return -1;
+    return TokPrec;
+}
+
+std::unique_ptr<ExprAST> Parser::parseExpr()
+{
+    switch (currentToken)
+    {
+    case TOKEN_IDENTIFIER:
+
+    default:
+        return nullptr;
+    }
+}
+
+std::unique_ptr<ExprAST> Parser::parseFuncDef()
 {
     getNextToken();
     if (currentToken != TOKEN_IDENTIFIER)
@@ -30,12 +54,16 @@ std::unique_ptr<ExprAST> Parser::parseFunc()
     {
         return logError("Expected \"(\"");
     }
-    do {
+    do
+    {
         getNextToken();
-        if (currentToken != TOKEN_IDENTIFIER && currentToken != TOKEN_NUMBER) {
+        if (currentToken != TOKEN_IDENTIFIER && currentToken != TOKEN_NUMBER)
+        {
             return logError("Expected identifier or number");
         }
-    } while(currentToken == ',');
+    } while (currentToken == ',');
+
+    return logError("THIS IS NOT YET FULL IMPLEMENTED");
 }
 
 void Parser::parse()
@@ -49,7 +77,7 @@ void Parser::parse()
             std::cout << "END OF FILE" << "\n";
             return;
         case TOKEN_DEF:
-            parseFunc();
+            parseFuncDef();
             break;
         case TOKEN_IDENTIFIER:
             std::cout << lexer.getIdentifier() << "\n";

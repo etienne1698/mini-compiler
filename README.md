@@ -1,5 +1,7 @@
-# Tuto "Kaleidoscope Langage" 
-https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl01.html#id1
+# CPP on windows
+```
+https://learn.microsoft.com/en-us/cpp/build/walkthrough-compiling-a-native-cpp-program-on-the-command-line?view=msvc-170
+```
 
 # Compile
 run
