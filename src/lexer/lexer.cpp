@@ -14,7 +14,7 @@ char Lexer::getNextChar()
     return '\0';
 }
 
-int Lexer::getNextToken()
+char Lexer::getNextToken()
 {
     char lastChar = getNextChar();
 
@@ -48,7 +48,7 @@ int Lexer::getNextToken()
         do
         {
             NumStr += lastChar;
-            lastChar = getchar();
+            lastChar = getNextChar();
         } while (isdigit(lastChar) || lastChar == '.');
 
         numVal = strtod(NumStr.c_str(), nullptr);

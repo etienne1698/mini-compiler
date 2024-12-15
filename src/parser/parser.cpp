@@ -33,7 +33,7 @@ int Parser::getTokenPrecedence()
 
 std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
 {
-    const auto identifierName = lexer.getIdentifier();
+    std::string identifierName = lexer.getIdentifier();
     getNextToken();
     if (currentToken != '(')
     {
@@ -92,6 +92,7 @@ std::unique_ptr<ExprAST> Parser::parseNumberExpr()
 
 std::unique_ptr<ExprAST> Parser::parseFuncDef()
 {
+    return logError("Not implemented yet");
 }
 
 void Parser::parse()
@@ -102,16 +103,13 @@ void Parser::parse()
         switch (currentToken)
         {
         case TOKEN_EOF:
-            std::cout << "END OF FILE" << "\n";
             return;
         case TOKEN_DEF:
             parseFuncDef();
             break;
-        case TOKEN_IDENTIFIER:
-            std::cout << lexer.getIdentifier() << "\n";
-            break;
         default:
-            return;
+            parseExpr();
+            break;
         }
     }
 }

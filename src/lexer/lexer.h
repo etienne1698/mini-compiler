@@ -14,13 +14,12 @@ class Lexer
     std::string source;
     double numVal;
     std::string identifierStr;
-    double numVal;
     size_t position = 0;
     char getNextChar();
 
 public:
     explicit Lexer(const std::string &input);
-    int getNextToken();
+    char getNextToken();
     std::string getIdentifier();
     double getNumVal();
 };
