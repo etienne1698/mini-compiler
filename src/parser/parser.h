@@ -2,12 +2,12 @@
 
 #include "../lexer/lexer.h"
 
-#include "../ast/expr_ast.h"
-#include "../ast/numberexpr_ast.h"
-#include "../ast/variableexpr_ast.h"
-#include "../ast/callexpr_ast.h"
-#include "../ast/binaryexpr_ast.h"
-#include "../ast/prototypeexpr_ast.h"
+#include "../ast/expressions/expr_ast.h"
+#include "../ast/expressions/numberexpr_ast.h"
+#include "../ast/expressions/variableexpr_ast.h"
+#include "../ast/expressions/callexpr_ast.h"
+#include "../ast/expressions/binaryexpr_ast.h"
+#include "../ast/expressions/prototypeexpr_ast.h"
 
 #ifndef PARSER_H
 #define PARSER_H
