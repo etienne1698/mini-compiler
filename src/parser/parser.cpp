@@ -135,7 +135,7 @@ std::unique_ptr<StatementAST> Parser::parseFuncDef()
     }
 
     std::cout << "Function def: " << identifierName; 
-    return std::make_unique<PrototypeAST>(identifierName, std::move(args));
+    return std::make_unique<PrototypeStatementAST>(identifierName, std::move(args));
 }
 
 void Parser::parse()

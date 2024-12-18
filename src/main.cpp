@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    Lexer lexer = Lexer("1 + 1");
+    Lexer lexer = Lexer("def abc () { return 1 + 1 }");
     Parser parser = Parser(lexer);
     parser.parse();
 
