@@ -7,7 +7,8 @@
 #include "../ast/expressions/variableexpr_ast.h"
 #include "../ast/expressions/callexpr_ast.h"
 #include "../ast/expressions/binaryexpr_ast.h"
-#include "../ast/expressions/prototypeexpr_ast.h"
+
+#include "../ast/statements/prototypeexpr_ast.h"
 
 #ifndef PARSER_H
 #define PARSER_H
@@ -15,7 +16,7 @@
 class Parser
 {
     Lexer lexer;
-    std::unique_ptr<ExprAST> parseFuncDef();
+    std::unique_ptr<StatementAST> parseFuncDef();
     std::unique_ptr<ExprAST> parseExpr();
 
     std::unique_ptr<ExprAST> parseParentesisExpr();

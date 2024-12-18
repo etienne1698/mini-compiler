@@ -31,6 +31,11 @@ int Parser::getTokenPrecedence()
     return TokPrec;
 }
 
+/**
+ * parse:
+ * - fnCall(...args)
+ * - variable
+ */
 std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
 {
     std::string identifierName = lexer.getIdentifier();
@@ -72,6 +77,13 @@ std::unique_ptr<ExprAST> Parser::parseExpr()
     }
 }
 
+/**
+ * parse:
+ * - (1 + 2)
+ * - (var)
+ * - (fncall())
+ * - ...
+ */
 std::unique_ptr<ExprAST> Parser::parseParentesisExpr()
 {
     getNextToken();
@@ -90,9 +102,40 @@ std::unique_ptr<ExprAST> Parser::parseNumberExpr()
     return std::move(Result);
 }
 
-std::unique_ptr<ExprAST> Parser::parseFuncDef()
+std::unique_ptr<StatementAST> Parser::parseFuncDef()
 {
-    return logError("Not implemented yet");
+    getNextToken();
+    if (currentToken != TOKEN_IDENTIFIER)
+    {
+        logError("Identifier Expected");
+        return nullptr;
+    }
+    std::string identifierName = lexer.getIdentifier();
+    getNextToken();
+    
+    if (currentToken != '(')
+    {
+        logError("Expected '('");
+        return nullptr;
+    }
+    std::vector<std::string> args;
+    while (true)
+    {
+        getNextToken();
+        if (currentToken == ')')
+        {
+            break;
+        }
+        if (currentToken != TOKEN_IDENTIFIER)
+        {
+            logError("Identifier Expected");
+            return nullptr;
+        }
+        args.push_back(lexer.getIdentifier());
+    }
+
+    std::cout << "Function def: " << identifierName; 
+    return std::make_unique<PrototypeAST>(identifierName, std::move(args));
 }
 
 void Parser::parse()
