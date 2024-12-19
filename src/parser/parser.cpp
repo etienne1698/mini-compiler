@@ -1,14 +1,12 @@
-#include <cctype>
-#include <string>
-#include "memory"
-
 #include "parser.h"
+
+using namespace std;
 
 Parser::Parser(const Lexer &lexer) : lexer(lexer)
 {
 }
 
-std::map<char, int> Parser::BinopPrecedence = {
+map<char, int> Parser::BinopPrecedence = {
     {'+', 10},
     {'-', 10},
     {'*', 20},
@@ -36,20 +34,20 @@ int Parser::getTokenPrecedence()
  * - fnCall(...args)
  * - variable
  */
-std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
+unique_ptr<ExprAST> Parser::parseIdentifierExpr()
 {
-    std::string identifierName = lexer.getIdentifier();
+    string identifierName = lexer.getIdentifier();
     getNextToken();
     if (currentToken != '(')
     {
-        std::cout << "Parse Variable: " << "\"" << identifierName << "\"" << "\n";
-        return std::make_unique<VariableExprAST>(identifierName);
+        cout << "Parse Variable: " << "\"" << identifierName << "\"" << "\n";
+        return make_unique<VariableExprAST>(identifierName);
     }
-    std::vector<std::unique_ptr<ExprAST>> args;
+    vector<unique_ptr<ExprAST>> args;
     while (true)
     {
         if (auto arg = parseExpr())
-            args.push_back(std::move(arg));
+            args.push_back(move(arg));
         else
             return nullptr;
         if (currentToken == ')')
@@ -59,11 +57,11 @@ std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
         getNextToken();
     }
     getNextToken();
-    std::cout << "Parse Function Call: " << "\"" << identifierName << "\"" << "\n";
-    return std::make_unique<CallExprAST>(identifierName, std::move(args));
+    cout << "Parse Function Call: " << "\"" << identifierName << "\"" << "\n";
+    return make_unique<CallExprAST>(identifierName, move(args));
 }
 
-std::unique_ptr<ExprAST> Parser::parsePrimaryExpr()
+unique_ptr<ExprAST> Parser::parsePrimaryExpr()
 {
     switch (currentToken)
     {
@@ -78,13 +76,13 @@ std::unique_ptr<ExprAST> Parser::parsePrimaryExpr()
     }
 }
 
-std::unique_ptr<ExprAST> Parser::parseExpr()
+unique_ptr<ExprAST> Parser::parseExpr()
 {
     auto LHS = parsePrimaryExpr();
     if (!LHS)
         return nullptr;
     getNextToken();
-    return parseBinOp(0, std::move(LHS));
+    return parseBinOp(0, move(LHS));
 }
 
 /**
@@ -94,7 +92,7 @@ std::unique_ptr<ExprAST> Parser::parseExpr()
  * - (fncall())
  * - ...
  */
-std::unique_ptr<ExprAST> Parser::parseParentesisExpr()
+unique_ptr<ExprAST> Parser::parseParentesisExpr()
 {
     getNextToken();
     auto V = parseExpr();
@@ -106,14 +104,14 @@ std::unique_ptr<ExprAST> Parser::parseParentesisExpr()
     getNextToken();
     return V;
 }
-std::unique_ptr<ExprAST> Parser::parseNumberExpr()
+unique_ptr<ExprAST> Parser::parseNumberExpr()
 {
-    auto Result = std::make_unique<NumberExprAST>(lexer.getNumVal());
-    std::cout << "Parse Number: " << lexer.getNumVal() << "\n";
-    return std::move(Result);
+    auto Result = make_unique<NumberExprAST>(lexer.getNumVal());
+    cout << "Parse Number: " << lexer.getNumVal() << "\n";
+    return move(Result);
 }
 
-std::unique_ptr<StatementAST> Parser::parseFuncDef()
+unique_ptr<StatementAST> Parser::parseFuncDef()
 {
     getNextToken();
     if (currentToken != TOKEN_IDENTIFIER)
@@ -121,7 +119,7 @@ std::unique_ptr<StatementAST> Parser::parseFuncDef()
         logError("Identifier Expected");
         return nullptr;
     }
-    std::string identifierName = lexer.getIdentifier();
+    string identifierName = lexer.getIdentifier();
     getNextToken();
 
     if (currentToken != '(')
@@ -129,7 +127,7 @@ std::unique_ptr<StatementAST> Parser::parseFuncDef()
         logError("Expected '('");
         return nullptr;
     }
-    std::vector<std::string> args;
+    vector<string> args;
     while (true)
     {
         getNextToken();
@@ -145,8 +143,8 @@ std::unique_ptr<StatementAST> Parser::parseFuncDef()
         args.push_back(lexer.getIdentifier());
     }
 
-    std::cout << "Function def: " << identifierName << "\n";
-    return std::make_unique<PrototypeStatementAST>(identifierName, std::move(args));
+    cout << "Function def: " << identifierName << "\n";
+    return make_unique<PrototypeStatementAST>(identifierName, move(args));
 }
 
 void Parser::parse()
@@ -168,14 +166,14 @@ void Parser::parse()
     }
 }
 
-std::unique_ptr<ExprAST> Parser::logError(std::string err)
+unique_ptr<ExprAST> Parser::logError(string err)
 {
-    std::cout << "\033[31;1;4m" << err << "\033[0m" << "\n";
+    cout << "\033[31;1;4m" << err << "\033[0m" << "\n";
     return nullptr;
 }
 
-std::unique_ptr<ExprAST> Parser::parseBinOp(int exprPrec,
-                                            std::unique_ptr<ExprAST> left)
+unique_ptr<ExprAST> Parser::parseBinOp(int exprPrec,
+                                            unique_ptr<ExprAST> left)
 {
 
     while (true)
@@ -197,14 +195,14 @@ std::unique_ptr<ExprAST> Parser::parseBinOp(int exprPrec,
 
         if (tokPrec < nextTokPrec)
         {
-            right = parseBinOp(tokPrec + 1, std::move(right));
+            right = parseBinOp(tokPrec + 1, move(right));
             if (!right)
                 return nullptr;
         }
 
-        std::cout << "Parsed Binary operation" << "\n";
+        cout << "Parsed Binary operation" << "\n";
         left =
-            std::make_unique<BinaryExprAST>(op, std::move(left), std::move(right));
+            make_unique<BinaryExprAST>(op, move(left), move(right));
     }
 
     return nullptr;

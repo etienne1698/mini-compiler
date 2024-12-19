@@ -1,22 +1,23 @@
 #include <iostream>
-#include "lexer/lexer.h"
-#include "parser/parser.h"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-std::string getFileContent(std::string fileName)
+#include "lexer/lexer.h"
+#include "parser/parser.h"
+
+using namespace std;
+
+
+string getFileContent(string fileName)
 {
-    std::ifstream inFile;
+    ifstream inFile;
     inFile.open(fileName);
 
-    std::stringstream strStream;
+    stringstream strStream;
     strStream << inFile.rdbuf();
     return strStream.str();
 }
-
-using namespace std;
 
 int main()
 {

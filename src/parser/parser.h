@@ -1,4 +1,7 @@
 #include "map"
+#include <cctype>
+#include <string>
+#include "memory"
 
 #include "../lexer/lexer.h"
 
