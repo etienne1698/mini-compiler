@@ -52,7 +52,7 @@ char Lexer::getNextToken()
         } while (isdigit(lastChar) || lastChar == '.');
 
         numVal = strtod(NumStr.c_str(), nullptr);
-        return TOKEN_IDENTIFIER;
+        return TOKEN_NUMBER;
     }
 
     return lastChar;

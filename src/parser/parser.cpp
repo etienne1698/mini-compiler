@@ -42,6 +42,7 @@ std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
     getNextToken();
     if (currentToken != '(')
     {
+        std::cout << "Parse Variable: " << "\"" << identifierName << "\"" << "\n";
         return std::make_unique<VariableExprAST>(identifierName);
     }
     std::vector<std::unique_ptr<ExprAST>> args;
@@ -58,7 +59,7 @@ std::unique_ptr<ExprAST> Parser::parseIdentifierExpr()
         getNextToken();
     }
     getNextToken();
-
+    std::cout << "Parse Function Call: " << "\"" << identifierName << "\"" << "\n";
     return std::make_unique<CallExprAST>(identifierName, std::move(args));
 }
 
@@ -108,6 +109,7 @@ std::unique_ptr<ExprAST> Parser::parseParentesisExpr()
 std::unique_ptr<ExprAST> Parser::parseNumberExpr()
 {
     auto Result = std::make_unique<NumberExprAST>(lexer.getNumVal());
+    std::cout << "Parse Number: " << lexer.getNumVal() << "\n";
     return std::move(Result);
 }
 
