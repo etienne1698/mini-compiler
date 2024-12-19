@@ -184,7 +184,7 @@ std::unique_ptr<ExprAST> Parser::parseBinOp(int exprPrec,
         if (tokPrec < exprPrec)
             return left;
 
-        int op = currentToken;
+        char op = currentToken;
         getNextToken();
         auto right = parsePrimaryExpr();
 
